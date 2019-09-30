@@ -4,14 +4,14 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>1e8f25d6-d515-4cd4-ad92-e4c29b100ded</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>
-    </StartupFile>
+    <StartupFile>app.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <Name>fsd_project1</Name>
     <RootNamespace>fsd_project1</RootNamespace>
+    <InterpreterId>MSBuild|prj1_env|$(MSBuildProjectFullPath)</InterpreterId>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,6 +31,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include=".vscode\" />
     <Folder Include="static\" />
     <Folder Include="static\css\" />
     <Folder Include="static\fonts\" />
@@ -44,6 +45,7 @@
     <Folder Include="templates\pages\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include=".vscode\settings.json" />
     <Content Include="error.log" />
     <Content Include="README.md" />
     <Content Include="requirements.txt" />
@@ -91,6 +93,18 @@
     <Content Include="templates\pages\show_artist.html" />
     <Content Include="templates\pages\show_venue.html" />
     <Content Include="templates\pages\venues.html" />
+    <Content Include="_ws.code-workspace" />
+  </ItemGroup>
+  <ItemGroup>
+    <Interpreter Include="prj1_env\">
+      <Id>prj1_env</Id>
+      <Version>3.6</Version>
+      <Description>prj1_env (Python 3.6 (64-bit))</Description>
+      <InterpreterPath>Scripts\python.exe</InterpreterPath>
+      <WindowsInterpreterPath>Scripts\pythonw.exe</WindowsInterpreterPath>
+      <PathEnvironmentVariable>PYTHONPATH</PathEnvironmentVariable>
+      <Architecture>X64</Architecture>
+    </Interpreter>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
