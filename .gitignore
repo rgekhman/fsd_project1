@@ -4430,3 +4430,5 @@ prj1_env/Lib/site-packages/psycopg2/extras.py
 prj1_env/Lib/site-packages/psycopg2/pool.py
 prj1_env/Lib/site-packages/psycopg2/sql.py
 __pycache__/models.cpython-36.pyc
+__pycache__/config.cpython-36.pyc
+__pycache__/forms.cpython-36.pyc
