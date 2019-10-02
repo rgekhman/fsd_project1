@@ -5462,8 +5462,6 @@
     <Content Include="templates\pages\show_venue.html" />
     <Content Include="templates\pages\venues.html" />
     <Content Include="_ws.code-workspace" />
-    <Content Include="__pycache__\config.cpython-36.pyc" />
-    <Content Include="__pycache__\forms.cpython-36.pyc" />
   </ItemGroup>
   <ItemGroup>
     <Interpreter Include="prj1_env\">
