@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>1e8f25d6-d515-4cd4-ad92-e4c29b100ded</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>app.py</StartupFile>
+    <StartupFile>migrate.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -26,6 +26,9 @@
     <Compile Include="config.py" />
     <Compile Include="fabfile.py" />
     <Compile Include="forms.py" />
+    <Compile Include="migrate.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="models.py">
       <SubType>Code</SubType>
     </Compile>
