@@ -23,9 +23,18 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="app.py" />
+    <Compile Include="Classes\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="config.py" />
+    <Compile Include="Classes\Venue.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="fabfile.py" />
     <Compile Include="forms.py" />
+    <Compile Include="migrate.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="models.py">
       <SubType>Code</SubType>
     </Compile>
@@ -1053,9 +1062,13 @@
     <Compile Include="prj1_env\Lib\_weakrefset.py" />
     <Compile Include="prj1_env\Lib\__future__.py" />
     <Compile Include="prj1_env\Scripts\activate_this.py" />
+    <Compile Include="Classes\CVenue_mixins.py">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include=".vscode\" />
+    <Folder Include="Classes\" />
     <Folder Include="prj1_env\" />
     <Folder Include="prj1_env\Include\" />
     <Folder Include="prj1_env\Lib\" />
@@ -5459,8 +5472,6 @@
     <Content Include="templates\pages\show_venue.html" />
     <Content Include="templates\pages\venues.html" />
     <Content Include="_ws.code-workspace" />
-    <Content Include="__pycache__\config.cpython-36.pyc" />
-    <Content Include="__pycache__\forms.cpython-36.pyc" />
   </ItemGroup>
   <ItemGroup>
     <Interpreter Include="prj1_env\">
