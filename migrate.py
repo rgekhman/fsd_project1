@@ -16,9 +16,9 @@
 
 from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
-from Classes import initAppDb,  Venue, Artist, Show
+import initAppDb
 
-i = initAppDb()
+i = CgetAppDb()
 app, db = i.getAppDb()
 
 migrate = Migrate(app, db)

@@ -1,23 +1,14 @@
-#from flask_script import Manager
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
+import initAppDb
+import VenueMixins
 
-class initAppDb():
-
-    def getAppDb(self):
-        app = Flask(__name__)
-        app.config.from_object('config')
-
-        db  = SQLAlchemy(app)
-        db.app = app
-        db.init_app(app)
-        return app, db
-
-i = initAppDb()
+i = CgetAppDb()
 app, db = i.getAppDb()
 
-class Venue(db.Model):
+class Venue(VenueMixins, db.Model ):
     __tablename__ = 'Venue'
+
+    def __init__(self):
+        super().__init__()
     
     # if _db is not None:
     id = db.Column(db.Integer, primary_key=True)
@@ -31,7 +22,7 @@ class Venue(db.Model):
     facebook_link = db.Column(db.String(120))
     seeking_talent = db.Column(db.Boolean)
     seeking_description = db.Column(db.String(500))
-    website = db.Column(db.String)
+    #website = db.Column(db.String)
 
 
 class Artist(db.Model):

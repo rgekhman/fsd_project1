@@ -1,4 +1,9 @@
-class venue_mixins(object):
+import initAppDb
+
+i = getAppDb()
+app, db = i.getAppDb()
+
+class VenueMixins(db.Model):
     """ venue class methods """
 
     def add(self):
