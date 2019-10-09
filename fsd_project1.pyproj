@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>1e8f25d6-d515-4cd4-ad92-e4c29b100ded</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>app.py</StartupFile>
+    <StartupFile>Classes\__init__.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -23,6 +23,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="app.py" />
+    <Compile Include="Classes\InitAppDb.py" />
+    <Compile Include="Classes\VenueMixins.py" />
     <Compile Include="Classes\__init__.py">
       <SubType>Code</SubType>
     </Compile>
@@ -1062,9 +1064,6 @@
     <Compile Include="prj1_env\Lib\_weakrefset.py" />
     <Compile Include="prj1_env\Lib\__future__.py" />
     <Compile Include="prj1_env\Scripts\activate_this.py" />
-    <Compile Include="Classes\CVenue_mixins.py">
-      <SubType>Code</SubType>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include=".vscode\" />
