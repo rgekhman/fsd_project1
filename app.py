@@ -251,7 +251,6 @@ def create_artist_submission():
         new_artist = Artist(
             name=artist_form.name.data,
             genres=','.join(artist_form.genres.data),
-            address=artist_form.address.data,
             city=artist_form.city.data,
             state=artist_form.state.data,
             phone=artist_form.phone.data,

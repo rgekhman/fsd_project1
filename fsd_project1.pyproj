@@ -1445,6 +1445,7 @@
     <Content Include=".gitignore" />
     <Content Include=".vscode\settings.json" />
     <Content Include="error.log" />
+    <Content Include="kill_py_bganalyzer.ps1" />
     <Content Include="prj1_env\Include\abstract.h" />
     <Content Include="prj1_env\Include\accu.h" />
     <Content Include="prj1_env\Include\asdl.h" />
