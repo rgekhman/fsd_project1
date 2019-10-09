@@ -59,9 +59,7 @@ def index():
     return render_template('pages/home.html')
 
 
-#  Venues
-#  ----------------------------------------------------------------
-
+#region  Venues
 @app.route('/venues')
 def venues():
     unique_city_states = Venue.query.distinct(Venue.city, Venue.state).all()
@@ -95,9 +93,6 @@ def show_venue(venue_id):
     data = venues.serialize_with_shows_details
     return render_template('pages/show_venue.html', venue=data)
 
-
-#  Create Venue
-#  ----------------------------------------------------------------
 @app.route('/venues/create', methods=['GET'])
 def create_venue_form():
     form = VenueForm()
@@ -141,76 +136,6 @@ def delete_venue(venue_id):
     except NoResultFound:
         abort(404)
 
-#  Artists
-#  ----------------------------------------------------------------
-@app.route('/artists')
-def artists():
-    artists = Artist.query.all()
-    data = [artist.serialize_with_shows_details for artist in artists]
-    return render_template('pages/artists.html', artists=data)
-
-
-@app.route('/artists/search', methods=['POST'])
-def search_artists():
-    search_term = request.form.get('search_term', None)
-    artists = Artist.query.filter(
-        Artist.name.ilike("%{}%".format(search_term))).all()
-    count_artists = len(artists)
-    response = {
-        "count": count_artists,
-        "data": [a.serialize for a in artists]
-    }
-    return render_template('pages/search_artists.html', results=response, search_term=request.form.get('search_term', ''))
-
-
-@app.route('/artists/<int:artist_id>')
-def show_artist(artist_id):
-    artist = Artist.query.filter(Artist.id == artist_id).one_or_none()
-
-    if artist is None:
-        abort(404)
-
-    data = artist.serialize_with_shows_details
-
-    return render_template('pages/show_artist.html', artist=data)
-
-#  Update
-#  ----------------------------------------------------------------
-@app.route('/artists/<int:artist_id>/edit', methods=['GET'])
-def edit_artist(artist_id):
-    artist_form = ArtistForm()
-
-    artist_to_update = Artist.query.filter(
-        Artist.id == artist_id).one_or_none()
-    if artist_to_update is None:
-        abort(404)
-
-    artist = artist_to_update.serialize
-    form = ArtistForm(data=artist)
-    return render_template('forms/edit_artist.html', form=form, artist=artist)
-
-
-@app.route('/artists/<int:artist_id>/edit', methods=['POST'])
-def edit_artist_submission(artist_id):
-    form = ArtistForm(request.form)
-    try:
-        artist = Artist.query.filter_by(id=artist_id).one()
-        artist.name = form.name.data,
-        artist.genres = json.dumps(form.genres.data),  # array json
-        artist.city = form.city.data,
-        artist.state = form.state.data,
-        artist.phone = form.phone.data,
-        artist.facebook_link = form.facebook_link.data,
-        artist.image_link = form.image_link.data,
-        artist.update()
-        # on successful db insert, flash success
-        flash('Artist ' + request.form['name'] + ' was successfully updated!')
-    except Exception as e:
-        flash('An error occurred. Artist ' +
-              request.form['name'] + ' could not be updated.')
-    return redirect(url_for('show_artist', artist_id=artist_id))
-
-
 @app.route('/venues/<int:venue_id>/edit', methods=['GET'])
 def edit_venue(venue_id):
     venue_form = VenueForm()
@@ -245,16 +170,78 @@ def edit_venue_submission(venue_id):
               request.form['name'] + ' could not be updated.')
 
     return redirect(url_for('show_venue', venue_id=venue_id))
+#endregion
 
-#  Create Artist
-#  ----------------------------------------------------------------
+#region Artists
+@app.route('/artists')
+def artists():
+    artists = Artist.query.all()
+    data = [artist.serialize_with_shows_details for artist in artists]
+    return render_template('pages/artists.html', artists=data)
 
+
+@app.route('/artists/search', methods=['POST'])
+def search_artists():
+    search_term = request.form.get('search_term', None)
+    artists = Artist.query.filter(
+        Artist.name.ilike("%{}%".format(search_term))).all()
+    count_artists = len(artists)
+    response = {
+        "count": count_artists,
+        "data": [a.serialize for a in artists]
+    }
+    return render_template('pages/search_artists.html', results=response, search_term=request.form.get('search_term', ''))
+
+
+@app.route('/artists/<int:artist_id>')
+def show_artist(artist_id):
+    artist = Artist.query.filter(Artist.id == artist_id).one_or_none()
+
+    if artist is None:
+        abort(404)
+
+    data = artist.serialize_with_shows_details
+
+    return render_template('pages/show_artist.html', artist=data)
+
+@app.route('/artists/<int:artist_id>/edit', methods=['GET'])
+def edit_artist(artist_id):
+    artist_form = ArtistForm()
+
+    artist_to_update = Artist.query.filter(
+        Artist.id == artist_id).one_or_none()
+    if artist_to_update is None:
+        abort(404)
+
+    artist = artist_to_update.serialize
+    form = ArtistForm(data=artist)
+    return render_template('forms/edit_artist.html', form=form, artist=artist)
+
+
+@app.route('/artists/<int:artist_id>/edit', methods=['POST'])
+def edit_artist_submission(artist_id):
+    form = ArtistForm(request.form)
+    try:
+        artist = Artist.query.filter_by(id=artist_id).one()
+        artist.name = form.name.data,
+        artist.genres = json.dumps(form.genres.data),  # array json
+        artist.city = form.city.data,
+        artist.state = form.state.data,
+        artist.phone = form.phone.data,
+        artist.facebook_link = form.facebook_link.data,
+        artist.image_link = form.image_link.data,
+        artist.update()
+        # on successful db insert, flash success
+        flash('Artist ' + request.form['name'] + ' was successfully updated!')
+    except Exception as e:
+        flash('An error occurred. Artist ' +
+              request.form['name'] + ' could not be updated.')
+    return redirect(url_for('show_artist', artist_id=artist_id))
 
 @app.route('/artists/create', methods=['GET'])
 def create_artist_form():
     form = ArtistForm()
     return render_template('forms/new_artist.html', form=form)
-
 
 @app.route('/artists/create', methods=['POST'])
 def create_artist_submission():
@@ -279,11 +266,9 @@ def create_artist_submission():
               request.form['name'] + ' could not be listed.')
 
     return render_template('pages/home.html')
+#endregion
 
-
-#  Shows
-#  ----------------------------------------------------------------
-
+#region  Shows
 @app.route('/shows')
 def shows():
     shows = Show.query.all()
@@ -291,10 +276,8 @@ def shows():
     print(data)
     return render_template('pages/shows.html', shows=data)
 
-
 @app.route('/shows/create')
 def create_shows():
-    # renders form. do not touch.
     form = ShowForm()
     return render_template('forms/new_show.html', form=form)
 
@@ -315,7 +298,7 @@ def create_show_submission():
         flash('An error occurred. Show could not be listed.')
 
     return render_template('pages/home.html')
-
+#endregion " Shows " 
 
 @app.errorhandler(404)
 def not_found_error(error):
