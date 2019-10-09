@@ -1,6 +1,6 @@
-import initAppDb
+import initAppDb as init
 
-i = getAppDb()
+i = init()
 app, db = i.getAppDb()
 
 class VenueMixins(db.Model):

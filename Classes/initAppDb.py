@@ -2,7 +2,10 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
-class CInitAppDb():
+class InitAppDb():
+
+    def __init__(self):
+        super().__init__()    
 
     def getAppDb(self):
         app = Flask(__name__)

@@ -1,14 +1,17 @@
-import initAppDb
-import VenueMixins
+from __future__ import absolute_import
+from Classes. import InitAppDb 
 
-i = CgetAppDb()
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+
+i = InitAppDb()
 app, db = i.getAppDb()
 
 class Venue(VenueMixins, db.Model ):
     __tablename__ = 'Venue'
 
-    def __init__(self):
-        super().__init__()
+    #def __init__(self):
+    #    super().__init__()
     
     # if _db is not None:
     id = db.Column(db.Integer, primary_key=True)
