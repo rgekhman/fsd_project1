@@ -89,10 +89,10 @@ def show_venue(venue_id):
     if venues is None:
         abort(404)
 
-    # data = [v.serialize_with_upcoming_shows_count for v in venues][0]
     data = venues.serialize_with_shows_details
     return render_template('pages/show_venue.html', venue=data)
 
+#serve empty form
 @app.route('/venues/create', methods=['GET'])
 def create_venue_form():
     form = VenueForm()
@@ -112,12 +112,15 @@ def create_venue_submission():
             phone=venue_form.phone.data,
             facebook_link=venue_form.facebook_link.data,
             image_link=venue_form.image_link.data)
-
-        new_venue.add()
-        # on successful db insert, flash success
-        flash('Venue ' +
-              request.form['name'] +
-              ' was successfully listed!')
+        if not new_venue.isExists():
+            new_venue.add()
+            # on successful db insert, flash success
+            flash('Venue ' +
+                  request.form['name'] +
+                  ' was successfully listed!')
+        else:
+            flash(  'Venue with a Name: {} , City: {} , and State: {} already exists! New record not inserted'.\
+                    format(request.form['name'], request.form['city'], request.form['state']))
     except Exception as ex:
         flash('An error occurred. Venue ' +
               request.form['name'] + ' could not be listed.')
@@ -192,17 +195,27 @@ def search_artists():
     }
     return render_template('pages/search_artists.html', results=response, search_term=request.form.get('search_term', ''))
 
+@app.route('/artists/<int:artist_id>', methods=['DELETE'])
+def delete_artist(artist_id):
+    try:
+        artist = Artist(id = artist_id)
+        artist.delete()
+        artists = artist.getAll()
+        data = [artist.serialize_with_shows_details for artist in artists]
+    except Exception as ex:
+        flash('An error occurred. Artist could not be deleted.')
+    return render_template('pages/artists.html', artist=data)
 
-@app.route('/artists/<int:artist_id>')
+
+@app.route('/artists/<int:artist_id>', methods=['POST'])
 def show_artist(artist_id):
     artist = Artist.query.filter(Artist.id == artist_id).one_or_none()
-
     if artist is None:
-        abort(404)
+        flash('Artist could not be found.')
 
     data = artist.serialize_with_shows_details
-
     return render_template('pages/show_artist.html', artist=data)
+
 
 @app.route('/artists/<int:artist_id>/edit', methods=['GET'])
 def edit_artist(artist_id):
@@ -257,9 +270,13 @@ def create_artist_submission():
             facebook_link=artist_form.facebook_link.data,
             image_link=artist_form.image_link.data)
 
-        new_artist.add()
-        # on successful db insert, flash success
-        flash('Artist ' + request.form['name'] + ' was successfully listed!')
+        if not new_artist.isExists():
+            new_artist.add()
+            flash('Artist ' + request.form['name'] + ' was successfully listed!')
+        else:
+            flash('Artist with a Name: {} , City: {} , and State: {} already exists! New record not inserted'.\
+                    format(request.form['name'], request.form['city'], request.form['state']))
+
     except Exception as ex:
         flash('An error occurred. Artist ' +
               request.form['name'] + ' could not be listed.')

@@ -1,3 +1,5 @@
+from sqlalchemy.sql import exists   
+from sqlalchemy import func
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -5,7 +7,6 @@ from flask_moment import Moment
 import datetime
 
 db = SQLAlchemy()
-
 
 class Venue(db.Model):
     __tablename__ = 'Venue'
@@ -26,6 +27,13 @@ class Venue(db.Model):
     def add(self):
         db.session.add(self)
         db.session.commit()
+
+    def isExists(self):
+        return db.session.query(exists().\
+                where(func.lower(Venue.name) == func.lower(self.name) and \
+                func.lower(Venue.city) == func.lower(self.city) and \
+                func.lower(Venue.state) == func.lower(self.state))).\
+                scalar()
 
     def update(self):
         db.session.update(self)
@@ -107,7 +115,6 @@ class Venue(db.Model):
                            for v in Venue.query.filter(Venue.city == self.city,
                                                        Venue.state == self.state).all()]}
 
-
 class Artist(db.Model):
     __tablename__ = 'Artist'
 
@@ -128,13 +135,24 @@ class Artist(db.Model):
         db.session.add(self)
         db.session.commit()
 
+    def isExists(self):
+        return db.session.query(exists().where(func.lower(Artist.name) == func.lower(self.name))).scalar()
+
     def update(self):
         db.session.update(self)
         db.session.commit()
 
+    def getAll(self):
+        return db.session.query(Artist).all()
+
     def delete(self):
-        db.session.delete(self)
-        db.session.commit()
+        try:
+            todo = db.session.query(Artist).\
+                filter(Artist.id == self.id).delete()
+        except :
+            db.session.rollback()
+        finally:         
+            db.session.commit()
 
     def __repr__(self):
         return '<Artist %r>' % self
@@ -178,7 +196,6 @@ class Artist(db.Model):
                 'facebook_link': self.facebook_link,
                 'seeking_venue': self.seeking_venue,
                 }
-
 
 class Show(db.Model):
     __tablename__ = 'Show'

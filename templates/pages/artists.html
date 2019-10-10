@@ -3,14 +3,65 @@
 {% block content %}
 <ul class="items">
 	{% for artist in artists %}
-	<li>
-		<a href="/artists/{{ artist.id }}">
-			<i class="fas fa-users"></i>
-			<div class="item">
-				<h5>{{ artist.name }}</h5>
-			</div>
-		</a>
-	</li>
+    <li>
+        <a href="/artists/{{ artist.id }}">
+            <i class="fas fa-users"></i>
+            <div class="item">
+                <h5>Name: {{ artist.name }}</h5>
+                <h5>City : {{ artist.city }}</h5>
+                <h5>State : {{ artist.state }}</h5>
+            </div>
+        </a>
+        <button class="btnDelete" id="btnDelete" data-id="{{ artist.id }}">&cross;</button>
+        <button class="btnUpdate" id="btnUpdate" data-id="{{ artist.id }}">Update</button>
+    </li>
 	{% endfor %}
 </ul>
+<script >
+    const delete_buttons = document.querySelectorAll('.btnDelete');
+    for (let i = 0; i < delete_buttons.length; i++) {
+        const delButton = delete_buttons[i];
+        delButton.onclick = function (e) {
+            console.log('event', e);
+            //debugger;
+            const artist_id = e.target.dataset['id'];
+            const r = confirm("Delete item?");
+            if (r) {
+                fetch('/artists/' + artist_id , {
+                    method: 'DELETE'
+                })
+                    .then(function () {
+                        //debugger;
+                        const item = e.target.parentElement;
+                        item.remove();
+                    })
+                    .catch(function () {
+                        document.getElementById('error').className = '';
+                    })
+            }
+        }
+    }
+
+    const update_buttons = document.querySelectorAll('.btnUpdate');
+    for (let i = 0; i < _buttons.length; i++) {
+        const _Button = _buttons[i];
+        _Button.onclick = function (e) {
+            console.log('event', e);
+            //debugger;
+            const artist_id = e.target.dataset['id'];
+            fetch('/artists/' + artist_id, {
+                method: 'PUT'
+            })
+            .then(function () {
+                //debugger;
+                const item = e.target.parentElement;
+                item.remove();
+            })
+            .catch(function () {
+                document.getElementById('error').className = '';
+            })
+        }
+    }
+
+</script>
 {% endblock %}
