@@ -15,14 +15,14 @@
                     <h5>State: {{ venue.state }}</h5>
                 </div>
             </a>
-            <button class="btnDelete" id="btnDelete" data-id="{{ venue.id }}">&cross;</button>
-            <button class="btnUpdate" id="btnUpdate" data-id="{{ venue.id }}">Update</button>
+            <button class="btnDelete" title="Delete" id="btnDelete" data-id="{{ venue.id }}">&cross;</button>
+            <!--<button class="btnUpdate" id="btnUpdate" data-id="{{ venue.id }}">Update</button>-->
         </li>
 		{% endfor %}
 	</ul>
 {% endfor %}
 <script>
-    addOnClickHandler({ selector: '.btnUpdate', method: 'PUT', collName: 'venues' })
+    //addOnClickHandler({ selector: '.btnUpdate', method: 'PUT', collName: 'venues' })
     addOnClickHandler({ selector: '.btnDelete', method: 'DELETE', collName: 'venues' })
 </script>
 {% endblock %}

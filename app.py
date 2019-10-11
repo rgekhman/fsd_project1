@@ -207,7 +207,7 @@ def delete_artist(artist_id):
     return render_template('pages/artists.html', artist=data)
 
 
-@app.route('/artists/<int:artist_id>', methods=['POST'])
+@app.route('/artists/<int:artist_id>', methods=['POST','GET'])
 def show_artist(artist_id):
     artist = Artist.query.filter(Artist.id == artist_id).one_or_none()
     if artist is None:
@@ -289,7 +289,7 @@ def create_artist_submission():
 def shows():
     shows = Show.query.all()
     data = [show.serialize_with_artist_venue for show in shows]
-    print(data)
+    #print(data)
     return render_template('pages/shows.html', shows=data)
 
 @app.route('/shows/create')

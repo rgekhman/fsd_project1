@@ -13,13 +13,13 @@
                 <h5>State : {{ artist.state }}</h5>
             </div>
         </a>
-        <button class="btnDelete" id="btnDelete" data-id="{{ artist.id }}">&cross;</button>
-        <button class="btnUpdate" id="btnUpdate" data-id="{{ artist.id }}">Update</button>
+        <button class="btnDelete" title="Delete" id="btnDelete" data-id="{{ artist.id }}">&cross;</button>
+        <!--<button class="btnUpdate" id="btnUpdate" data-id="{{ artist.id }}">Update</button>-->
     </li>
 	{% endfor %}
 </ul>
 <script >
-    addOnClickHandler({ selector: '.btnUpdate', method: 'PUT', collName: 'artists' })
+    //addOnClickHandler({ selector: '.btnUpdate', method: 'PUT', collName: 'artists' })
     addOnClickHandler({ selector: '.btnDelete', method: 'DELETE', collName: 'artists' })
 </script>
 {% endblock %}
