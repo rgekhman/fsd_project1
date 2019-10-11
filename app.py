@@ -64,8 +64,7 @@ def index():
 def venues():
     unique_city_states = Venue.query.distinct(Venue.city, Venue.state).all()
     data = [ucs.filter_on_city_state for ucs in unique_city_states]
-    print(data)
-
+    #print(data)   
     return render_template('pages/venues.html', areas=data)
 
 
@@ -129,15 +128,16 @@ def create_venue_submission():
     return render_template('pages/home.html')
 
 
-@app.route('/venues/<venue_id>', methods=['DELETE'])
+@app.route('/venues/<int:venue_id>', methods=['DELETE'])
 def delete_venue(venue_id):
     try:
-        venue_to_delete = Venue.query.filter(Venue.id == venue_id).one()
-        venue_to_delete.delete()
-        flask("Venue {0} has been deleted successfully".format(
-            venue_to_delete[0]['name']))
-    except NoResultFound:
-        abort(404)
+        venue = Venue(id = venue_id)
+        venue.delete()
+        venues = venue.getAll()
+        data = [venue.serialize_with_shows_details for venue in venues]
+    except Exception as ex:
+        flash('An error occurred. Artist could not be deleted.')
+    return render_template('pages/venues.html', venue=data)
 
 @app.route('/venues/<int:venue_id>/edit', methods=['GET'])
 def edit_venue(venue_id):
@@ -314,6 +314,18 @@ def create_show_submission():
         flash('An error occurred. Show could not be listed.')
 
     return render_template('pages/home.html')
+
+@app.route('/shows/<int:show_id>', methods=['DELETE'])
+def delete_show(show_id):
+    try:
+        show = Show(id = show_id)
+        show.delete()
+        shows = show.getAll()
+        data = [show.serialize_with_artist_venue for show in shows]
+    except Exception as ex:
+        flash('An error occurred. Artist could not be deleted.')
+    return render_template('pages/shows.html', show=data)
+
 #endregion " Shows " 
 
 @app.errorhandler(404)

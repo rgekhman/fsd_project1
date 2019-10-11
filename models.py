@@ -39,9 +39,17 @@ class Venue(db.Model):
         db.session.update(self)
         db.session.commit()
 
+    def getAll(self):
+        return db.session.query(Venue).all()
+
     def delete(self):
-        db.session.delete(self)
-        db.session.commit()
+        try:
+            todo = db.session.query(Venue).\
+                filter(Venue.id == self.id).delete()
+        except :
+            db.session.rollback()
+        finally:         
+            db.session.commit()
 
     def __repr__(self):
         return '<Venue %r>' % self
@@ -215,9 +223,17 @@ class Show(db.Model):
         db.session.update(self)
         db.session.commit()
 
+    def getAll(self):
+        return db.session.query(Show).all()
+
     def delete(self):
-        db.session.delete(self)
-        db.session.commit()
+        try:
+            todo = db.session.query(Show).\
+                filter(Show.id == self.id).delete()
+        except :
+            db.session.rollback()
+        finally:         
+            db.session.commit()
 
     def __repr__(self):
         return '<Show %r>' % self

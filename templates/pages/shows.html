@@ -6,12 +6,19 @@
     <div class="col-sm-4">
         <div class="tile tile-show">
             <img src="{{ show.artist_image_link }}" alt="Artist Image" />
-            <h4>{{ show.start_time|datetime('full') }}</h4>
-            <h5><a href="/artists/{{ show.artist_id }}">{{ show.artist_name }}</a></h5>
+            <!-- |datetime('full') -->
+            <h4>{{ show.start_time }}</h4>
+            <h5>Artist: <a href="/artists/{{ show.artist.id }}">{{ show.artist.name }}</a></h5>
             <p>playing at</p>
-            <h5><a href="/venues/{{ show.venue_id }}">{{ show.venue_name }}</a></h5>
+            <h5>Venue: <a href="/venues/{{ show.venue.id }}">{{ show.venue.name }}</a></h5>
         </div>
     </div>
+    <button class="btnDelete" id="btnDelete" data-id="{{ show.id }}">&cross;</button>
+    <button class="btnUpdate" id="btnUpdate" data-id="{{ show.id }}">Update</button>
     {% endfor %}
 </div>
+<script>
+    addOnClickHandler({ selector: '.btnUpdate', method: 'PUT', collName: 'shows' })
+    addOnClickHandler({ selector: '.btnDelete', method: 'DELETE', collName: 'shows' })
+</script>
 {% endblock %}
