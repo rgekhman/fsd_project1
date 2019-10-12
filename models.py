@@ -42,6 +42,12 @@ class Venue(db.Model):
     def getAll(self):
         return db.session.query(Venue).all()
 
+    def isVenueExistsInShows(self):
+        q = db.session.query(Show).\
+                filter(Show.venue_id == self.id).all()
+        return len(q) > 0, q 
+        
+
     def delete(self):
         try:
             todo = db.session.query(Venue).\
@@ -153,6 +159,10 @@ class Artist(db.Model):
     def getAll(self):
         return db.session.query(Artist).all()
 
+    def getById(self):
+        return db.session.query(Artist).\
+                filter(Artist.id == self.id).first()
+
     def delete(self):
         try:
             todo = db.session.query(Artist).\
@@ -164,6 +174,11 @@ class Artist(db.Model):
 
     def __repr__(self):
         return '<Artist %r>' % self
+
+    def isArtistExistsInShows(self):
+        q = db.session.query(Show).\
+                filter(Show.artist_id == self.id).all()
+        return len(q) > 0, q 
 
     @property
     def serialize_with_shows_details(self):
@@ -222,6 +237,14 @@ class Show(db.Model):
     def update(self):
         db.session.update(self)
         db.session.commit()
+
+    def isExists(self):
+        q = db.session.query(Show).\
+                filter(Show.artist_id == self.artist_id).\
+                filter(Show.venue_id == self.venue_id).\
+                filter(Show.start_time == self.start_time).all()
+        return len(q) > 0 
+        
 
     def getAll(self):
         return db.session.query(Show).all()

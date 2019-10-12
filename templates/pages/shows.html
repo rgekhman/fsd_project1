@@ -8,9 +8,9 @@
             <!--<img src="{{ show.artist_image_link }}" alt="Artist Image" />-->
             <!-- |datetime('full') -->
             <h4>{{ show.start_time }}</h4>
-            <h5>Artist: <a href="/artists/{{ show.artist.id }}">{{ show.artist.name }}</a></h5>
+            <h5>Artist: <a href="/artists/{{ show.artist.id }}">{{ show.artist.name }} ({{ show.artist.id }})</a></h5>
             <p>playing at</p>
-            <h5>Venue: <a href="/venues/{{ show.venue.id }}">{{ show.venue.name }}</a></h5>
+            <h5>Venue: <a href="/venues/{{ show.venue.id }}">{{ show.venue.name }} ({{ show.venue.id }})</a></h5>
             <button class="btnDelete" id="btnDelete" title="Delete" data-id="{{ show.id }}">&cross;</button>
         </div>
     </div>

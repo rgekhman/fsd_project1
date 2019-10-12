@@ -34,13 +34,29 @@ function addOnClickHandler(args) {
                 fetch('/' + _collName + '/' + _id, {
                     method: _method
                 })
-                .then(function () {
-                    //debugger;
-                    const item = e.target.parentElement;
-                    item.remove();
-                })
-                .catch(function () {
-                    document.getElementById('error').className = '';
+                    .then((response) => {
+                        //debugger;
+                        if (response.status === 521 ||
+                            response.status === 200 || 
+                            response.status === 522 ) {
+                            return response.json()
+                        }
+                    })
+                    .then((data) => {
+                        debugger;
+                        if (data.type === 'error') {
+                            alert(data.message);
+                            console.log(data.type, data.message);
+                        } else {
+                            location.reload();
+                            //const item = e.target.parentElement;
+                            //item.remove();
+                            console.log('success')
+                        }
+                    })
+                    .catch((err) => {
+                        //debugger;
+                    console.log(err);
                 })
             }
         }

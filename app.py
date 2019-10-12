@@ -5,20 +5,22 @@ import os
 import json
 import dateutil.parser
 import babel
-from flask import Flask, render_template, request, Response, flash, redirect, url_for
+from flask import Flask, render_template, request, Response, flash, redirect, url_for, jsonify
 from flask_moment import Moment
 from flask_sqlalchemy import SQLAlchemy
 import logging
 from logging import Formatter, FileHandler
 from flask_wtf import Form
 from forms import *
-from sqlalchemy_utils import create_database, database_exists
+from sqlalchemy_utils import create_database, database_exists, get_referencing_foreign_keys
 import config
 from models import db, Artist, Venue, Show
 import traceback
 from flask_migrate import Migrate, MigrateCommand
 from flask_script import Manager
 from sqlalchemy.orm.exc import NoResultFound
+
+
 
 #----------------------------------------------------------------------------#
 # App Config.
@@ -33,11 +35,25 @@ migrate = Migrate(app, db)
 manager = Manager(app)
 manager.add_command('db', MigrateCommand)
 
+
+class CannotRemoveObject(Exception):
+    status_code = 400
+
+    def __init__(self, message, status_code=None, payload=None):
+        Exception.__init__(self)
+        self.message = message
+        if status_code is not None:
+            self.status_code = status_code
+        self.payload = payload
+
+    def to_dict(self):
+        rv = dict(self.payload or ())
+        rv['message'] = self.message
+        return rv
+
 #----------------------------------------------------------------------------#
 # Filters.
 #----------------------------------------------------------------------------#
-
-
 def format_datetime(value, format='medium'):
     date = dateutil.parser.parse(value)
     if format == 'full':
@@ -53,11 +69,9 @@ app.jinja_env.filters['datetime'] = format_datetime
 # Controllers.
 #----------------------------------------------------------------------------#
 
-
 @app.route('/')
 def index():
     return render_template('pages/home.html')
-
 
 #region  Venues
 @app.route('/venues')
@@ -127,17 +141,35 @@ def create_venue_submission():
 
     return render_template('pages/home.html')
 
-
 @app.route('/venues/<int:venue_id>', methods=['DELETE'])
 def delete_venue(venue_id):
+    venue = Venue(id = venue_id)
     try:
-        venue = Venue(id = venue_id)
-        venue.delete()
-        venues = venue.getAll()
-        data = [venue.serialize_with_shows_details for venue in venues]
+        isVenueExistsInShows, shows = venue.isVenueExistsInShows()
+        if not isVenueExistsInShows:
+            venue.delete()
+
+            #venues = Venue.query.all()
+            #data = [venue.serialize_with_shows_details for venue in venues]
+            #return render_template('pages/venues.html', venues=data)
+
+            response = jsonify(type="success")
+            response.status_code = 200
+            return response
+        else: 
+            raise CannotRemoveObject('Cannot remove this venue because it is used in {} Shows'.format(len(shows)))
+    
+    except CannotRemoveObject as ex:
+        _message = 'Venue could not be deleted. ' + ex.message
+        response = jsonify(type="error", message=_message)
+        response.status_code = 521 #custom server error code
+        return response
+
     except Exception as ex:
-        flash('An error occurred. Artist could not be deleted.')
-    return render_template('pages/venues.html', venue=data)
+        _message = 'An error occurred. ' + ex.args[0]
+        response = jsonify(type="error", message=_message)
+        response.status_code = 522 #custom server error code
+        return response       
 
 @app.route('/venues/<int:venue_id>/edit', methods=['GET'])
 def edit_venue(venue_id):
@@ -197,14 +229,28 @@ def search_artists():
 
 @app.route('/artists/<int:artist_id>', methods=['DELETE'])
 def delete_artist(artist_id):
+    artist = Artist(id = artist_id)    
     try:
-        artist = Artist(id = artist_id)
-        artist.delete()
-        artists = artist.getAll()
-        data = [artist.serialize_with_shows_details for artist in artists]
+        isArtistExistsInShows, shows = artist.isArtistExistsInShows()
+        if not isArtistExistsInShows:
+            artist.delete()
+            response = jsonify(type="success")
+            response.status_code = 200
+            return response
+        else: 
+            raise CannotRemoveObject('Cannot remove this artist because it is used in {} Shows'.format(len(shows)))
+
+    except CannotRemoveObject as ex:
+        _message = 'Artist could not be deleted. ' + ex.message
+        response = jsonify(type="error", message=_message)
+        response.status_code = 521 #custom server error code
+        return response 
+
     except Exception as ex:
-        flash('An error occurred. Artist could not be deleted.')
-    return render_template('pages/artists.html', artist=data)
+        _message = 'An error occurred. ' + ex.args[0]
+        response = jsonify(type="error", message=_message)
+        response.status_code = 522 #custom server error code
+        return response       
 
 
 @app.route('/artists/<int:artist_id>', methods=['POST','GET'])
@@ -307,9 +353,16 @@ def create_show_submission():
             venue_id=show_form.venue_id.data,
             start_time=show_form.start_time.data
         )
-        show.add()
-        # on successful db insert, flash success
-        flash('Show was successfully listed!')
+        
+        if show.start_time is None:
+            flash('Show could not be listed. Please make sure that a Show Start Time is in a format YYYY-MM-DD HH:MM:SS.')
+            return render_template('pages/home.html')
+
+        if not show.isExists():
+            show.add()
+            flash('Show was successfully listed!')
+        else:
+            flash('Show for this artist / venue / time already exists!')
     except Exception as e:
         flash('An error occurred. Show could not be listed.')
 
@@ -317,14 +370,19 @@ def create_show_submission():
 
 @app.route('/shows/<int:show_id>', methods=['DELETE'])
 def delete_show(show_id):
+    show = Show(id = show_id)
     try:
-        show = Show(id = show_id)
         show.delete()
-        shows = show.getAll()
-        data = [show.serialize_with_artist_venue for show in shows]
+        response = jsonify(type="success")
+        response.status_code = 200
+        return response
+
     except Exception as ex:
-        flash('An error occurred. Artist could not be deleted.')
-    return render_template('pages/shows.html', show=data)
+        _message = 'An error occurred. ' + ex.args[0]
+        response = jsonify(type="error", message=_message)
+        response.status_code = 522 #custom server error code
+        return response    
+
 
 #endregion " Shows " 
 

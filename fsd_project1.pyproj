@@ -24,6 +24,9 @@
   <ItemGroup>
     <Compile Include="app.py" />
     <Compile Include="config.py" />
+    <Compile Include="customExceptions.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="fabfile.py" />
     <Compile Include="forms.py" />
     <Compile Include="migrate.py">
