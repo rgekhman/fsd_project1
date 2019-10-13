@@ -16,8 +16,6 @@ from sqlalchemy_utils import create_database, database_exists, get_referencing_f
 import config
 from models import db, Artist, Venue, Show
 import traceback
-from flask_migrate import Migrate, MigrateCommand
-from flask_script import Manager
 from sqlalchemy.orm.exc import NoResultFound
 
 
@@ -30,10 +28,6 @@ app = Flask(__name__)
 app.config.from_object('config')
 moment = Moment(app)
 db.init_app(app)
-migrate = Migrate(app, db)
-
-manager = Manager(app)
-manager.add_command('db', MigrateCommand)
 
 
 class CannotRemoveObject(Exception):

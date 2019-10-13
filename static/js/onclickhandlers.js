@@ -48,10 +48,18 @@ function addOnClickHandler(args) {
                             alert(data.message);
                             console.log(data.type, data.message);
                         } else {
+                            // On successful delete reload current page.
+                            // 
+                            // Ideally the way to go would be to remove page 
+                            // elements in javascript similar to 
+                            //  const item = e.target.parentElement;
+                            //  item.remove();
+                            // but it will involve more coding and testing from different 
+                            // view for this  generic click handler. 
+                            // Also, the elements will not be properly ligned 
+                            // up / sorted if removed from within a page by JS calls.
+                            // For this exercise location.reload() is enough. 
                             location.reload();
-                            //const item = e.target.parentElement;
-                            //item.remove();
-                            console.log('success')
                         }
                     })
                     .catch((err) => {
