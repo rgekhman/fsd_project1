@@ -31,7 +31,7 @@ db.init_app(app)
 
 
 class CannotRemoveObject(Exception):
-    status_code = 400
+    status_code = 521   # custom error code - could not remove item
 
     def __init__(self, message, status_code=None, payload=None):
         Exception.__init__(self)
@@ -143,10 +143,6 @@ def delete_venue(venue_id):
         if not isVenueExistsInShows:
             venue.delete()
 
-            #venues = Venue.query.all()
-            #data = [venue.serialize_with_shows_details for venue in venues]
-            #return render_template('pages/venues.html', venues=data)
-
             response = jsonify(type="success")
             response.status_code = 200
             return response
@@ -156,7 +152,7 @@ def delete_venue(venue_id):
     except CannotRemoveObject as ex:
         _message = 'Venue could not be deleted. ' + ex.message
         response = jsonify(type="error", message=_message)
-        response.status_code = 521 #custom server error code
+        response.status_code = ex.status_code
         return response
 
     except Exception as ex:
@@ -237,7 +233,7 @@ def delete_artist(artist_id):
     except CannotRemoveObject as ex:
         _message = 'Artist could not be deleted. ' + ex.message
         response = jsonify(type="error", message=_message)
-        response.status_code = 521 #custom server error code
+        response.status_code = ex.status_code
         return response 
 
     except Exception as ex:
