@@ -1,4 +1,6 @@
 """
+- Roman Gekhman ... 
++++
 FYYUR -	Migration script
 1. To init run: 
 	> python migrate.py db init
