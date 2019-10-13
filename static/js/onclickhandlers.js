@@ -34,7 +34,7 @@ function addOnClickHandler(args) {
                 fetch('/' + _collName + '/' + _id, {
                     method: _method
                 })
-                    .then((response) => {
+                    .then(function(response) {
                         //debugger;
                         if (response.status === 521 ||
                             response.status === 200 || 
@@ -42,8 +42,8 @@ function addOnClickHandler(args) {
                             return response.json()
                         }
                     })
-                    .then((data) => {
-                        debugger;
+                    .then(function(data)  {
+                        //debugger;
                         if (data.type === 'error') {
                             alert(data.message);
                             console.log(data.type, data.message);
@@ -62,7 +62,7 @@ function addOnClickHandler(args) {
                             location.reload();
                         }
                     })
-                    .catch((err) => {
+                    .catch(function(err) {
                         //debugger;
                     console.log(err);
                 })
