@@ -58,7 +58,6 @@ function addOnClickHandler(args) {
                             // view for this  generic click handler. 
                             // Also, the elements will not be properly ligned 
                             // up / sorted if removed from within a page by JS calls.
-                            // For this exercise location.reload() is enough. 
                             location.reload();
                         }
                     })

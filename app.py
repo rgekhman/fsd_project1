@@ -30,6 +30,26 @@ moment = Moment(app)
 db.init_app(app)
 
 
+@app.errorhandler(404)
+def not_found_error(error):
+    return render_template('errors/404.html'), 404
+
+
+@app.errorhandler(500)
+def server_error(error):
+    return render_template('errors/500.html'), 500
+if not app.debug:
+    file_handler = FileHandler('error.log')
+    file_handler.setFormatter(
+        Formatter(
+            '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]')
+    )
+    app.logger.setLevel(logging.INFO)
+    file_handler.setLevel(logging.INFO)
+    app.logger.addHandler(file_handler)
+    app.logger.info('errors')
+
+
 class CannotRemoveObject(Exception):
     status_code = 521   # custom error code - could not remove item
 
@@ -94,7 +114,7 @@ def show_venue(venue_id):
     venues = Venue.query.filter(Venue.id == venue_id).one_or_none()
 
     if venues is None:
-        abort(404)
+        Flask.abort(404)
 
     data = venues.serialize_with_shows_details
     return render_template('pages/show_venue.html', venue=data)
@@ -167,11 +187,11 @@ def edit_venue(venue_id):
 
     venue_to_update = Venue.query.filter(Venue.id == venue_id).one_or_none()
     if venue_to_update is None:
-        abort(404)
+        Flask.abort(404)
 
     venue = venue_to_update.serialize
     form = VenueForm(data=venue)
-    return render_template('forms/edit_venue.html', form=form, venue=artist)
+    return render_template('forms/edit_venue.html', form=form, venue=venue)
 
 
 @app.route('/venues/<int:venue_id>/edit', methods=['POST'])
@@ -260,7 +280,7 @@ def edit_artist(artist_id):
     artist_to_update = Artist.query.filter(
         Artist.id == artist_id).one_or_none()
     if artist_to_update is None:
-        abort(404)
+        Flask.abort(404)
 
     artist = artist_to_update.serialize
     form = ArtistForm(data=artist)
@@ -375,27 +395,6 @@ def delete_show(show_id):
 
 
 #endregion " Shows " 
-
-@app.errorhandler(404)
-def not_found_error(error):
-    return render_template('errors/404.html'), 404
-
-
-@app.errorhandler(500)
-def server_error(error):
-    return render_template('errors/500.html'), 500
-
-
-if not app.debug:
-    file_handler = FileHandler('error.log')
-    file_handler.setFormatter(
-        Formatter(
-            '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]')
-    )
-    app.logger.setLevel(logging.INFO)
-    file_handler.setLevel(logging.INFO)
-    app.logger.addHandler(file_handler)
-    app.logger.info('errors')
 
 #----------------------------------------------------------------------------#
 # Launch.
