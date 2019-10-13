@@ -36,8 +36,8 @@ function addOnClickHandler(args) {
                 })
                     .then(function(response) {
                         //debugger;
-                        if (response.status === 521 ||
-                            response.status === 200 || 
+                        if (response.status === 200 ||
+                            response.status === 521 || 
                             response.status === 522 ) {
                             return response.json();
                         }
@@ -65,7 +65,7 @@ function addOnClickHandler(args) {
                     .catch(function(err) {
                         //debugger;
                     console.log(err);
-                })
+                });
             }
         }
     }
