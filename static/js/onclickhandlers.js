@@ -39,7 +39,7 @@ function addOnClickHandler(args) {
                         if (response.status === 521 ||
                             response.status === 200 || 
                             response.status === 522 ) {
-                            return response.json()
+                            return response.json();
                         }
                     })
                     .then(function(data)  {
