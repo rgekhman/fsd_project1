@@ -56,7 +56,7 @@ function addOnClickHandler(args) {
                             //  item.remove();
                             // but it will involve more coding and testing from different 
                             // view for this  generic click handler. 
-                            // Also, the elements will not be properly ligned 
+                            // Also, the elements will not be properly aligned 
                             // up / sorted if removed from within a page by JS calls.
                             location.reload();
                         }
